@@ -21,7 +21,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!supabase) { setLoading(false); return; }
+        if (!supabase) {
+            // Local Mock Session
+            const localSession = localStorage.getItem("mock_session");
+            if (localSession) {
+                const parsed = JSON.parse(localSession);
+                setUser(parsed.user);
+                setSession(parsed.session);
+            }
+            setLoading(false);
+            return;
+        }
 
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
@@ -38,7 +48,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const signUp = useCallback(async (email: string, password: string, name: string) => {
-        if (!supabase) return { error: "Supabase not configured" };
+        if (!supabase) {
+            // Mock signup
+            const users = JSON.parse(localStorage.getItem("mock_users") || "{}");
+            if (users[email]) return { error: "User already exists" };
+            users[email] = { password, name };
+            localStorage.setItem("mock_users", JSON.stringify(users));
+            return { error: null };
+        }
         const { error } = await supabase.auth.signUp({
             email, password,
             options: { data: { full_name: name } },
@@ -47,13 +64,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const signIn = useCallback(async (email: string, password: string) => {
-        if (!supabase) return { error: "Supabase not configured" };
+        if (!supabase) {
+            // Mock login
+            const users = JSON.parse(localStorage.getItem("mock_users") || "{}");
+            const userData = users[email];
+            if (!userData || userData.password !== password) {
+                return { error: "Invalid email or password" };
+            }
+            const dummyUser = { id: email, email, user_metadata: { full_name: userData.name } } as unknown as User;
+            const dummySession = { user: dummyUser, access_token: "mock-token" } as unknown as Session;
+            localStorage.setItem("mock_session", JSON.stringify({ user: dummyUser, session: dummySession }));
+            setUser(dummyUser);
+            setSession(dummySession);
+            return { error: null };
+        }
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         return { error: error?.message ?? null };
     }, []);
 
     const signOut = useCallback(async () => {
-        if (!supabase) return;
+        if (!supabase) {
+            // Mock signout
+            localStorage.removeItem("mock_session");
+            setUser(null);
+            setSession(null);
+            return;
+        }
         await supabase.auth.signOut();
         setUser(null);
         setSession(null);

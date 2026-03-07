@@ -7,11 +7,13 @@ import { probabilityLesson, integralsLesson, spaceGeometryLesson, arithmeticLess
 import { continuityExtra, derivativesExtra, exponentialExtra, logarithmExtra, primitivesExtra, sequencesExtra } from "./math-supplements";
 import { pcLessons } from "./pc-lessons";
 import { pcLessonsNew } from "./pc-lessons-new";
+import { pcLessonsRest } from "./pc-lessons-rest";
 import { englishLessons } from "./english-lessons";
+import { englishLessonsNew } from "./english-lessons-new";
 import { svtLessons } from "./svt-lessons";
 import { philosophyLessons } from "./philosophy-lessons";
 
-const allPcLessons = [...pcLessons, ...pcLessonsNew];
+const allPcLessons = [...pcLessons, ...pcLessonsNew, ...pcLessonsRest];
 
 // Map of extra content per lesson id
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,8 +97,8 @@ export const subjects: Subject[] = [
         icon: "📝",
         color: "#22d3ee",
         gradient: "linear-gradient(135deg, #22d3ee, #4f8cf7)",
-        description: "Gifts of Youth, Moroccan Culture, Women & Power — Grammar, Vocabulary, Writing",
-        lessons: englishLessons,
+        description: "Gifts of Youth, Moroccan Culture, Women & Power, Science, Humour, Citizenship, etc.",
+        lessons: [...englishLessons, ...englishLessonsNew],
         examCoefficient: 2,
     },
 ];
