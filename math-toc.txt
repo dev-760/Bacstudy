@@ -1,0 +1,35 @@
+Pages: 151
+PAGE 2: Prerequisites:  ➢   Set of definition, derivation, limits, infinite branches, intervals, …  Expected skills:  ➢   Determine the image of a segment or an interval by a continuous function or by a continuous and strictly monotonic  function;  ➢   Apply the intermediate value theorem to the study of some equations or inequalities or to the study of the sign of some  expressions…;  ➢   Use the dichoto
+---
+PAGE 3: Chapter 1:   Continuity  I -   Continuity of a function at a point   –   continuity on an interval:  1 -   Continuity of a function at a point:  Activity   ❶   :   Let us consider   𝑓 a numerical function defined by: { 𝑓 ( 𝑥 )   =   𝑥 3 + 1  𝑥 + 1   ;   𝑥   ≠   − 1  𝑓 ( − 1 )   =   3 ;   𝑥   =   − 1  Let's calculate   lim  𝑥 → − 1   𝑓 ( 𝑥 )  Definition :  Let be   𝑓 a numeric function 
+---
+PAGE 16: Prerequisites:  ➢   Derivability of a function, tangents, limits, even or odd function…  Expected skills:  ➢   Calculate the derivatives of common functions;  ➢   Determine the monotonicity of a function from the sign of its derivative or its variation table or its graphical  representation;  ➢   Solve equations of the form graphically 𝑓 ( 𝑥 )   =   𝑔 ( 𝑥 )   and inequalities of the form   𝑓 
+---
+PAGE 17: Chapter 2:   Derivation and its applications  I -   Reminder :  1 -   Differentiability of a function at a point:  Definition (1): (derived number)  Either 𝑓   a function defined on an open interval   I   and   a   an element of   I   .  We say that   𝑓 is derivable at   a,   if there exists a real number   ℓ   such that:   𝒍𝒊𝒎  𝒙 → 𝒂  𝒇 ( 𝒙 ) − 𝒇 ( 𝒂 )  𝒙 − 𝒂   = ℓ  The number   ℓ   
+---
+PAGE 31: Chapter 3:   Study of a numerical function  To study a function   𝑓 , we often follow the following steps:  1)   Determine the definition set   𝑫 𝒇 or   𝒇   field of study 𝑫 𝑬  2)   Check if 𝒇   is even or odd or periodic  In this case, we reduce the definition set   𝐷 𝑓 to the domain of study   𝐷 𝐸   and determine the symmetry elements  of ( 𝒞 𝑓 )  The elements of symmetry of a curve
+---
+PAGE 40: Chapter 4:   Primitives of a Function  I -   Definition :  Definition :  Let   f be   a function defined on an interval   I   .  We call a   primitive function   , or primitive of   f   on   I   , any function   F   defined and   d iffer e ntiable   on   I   such  that: (     𝒙     𝑰   )   :   𝑭   ’ (   𝒙   )   =   𝒇 (   𝒙   )  Examples:  …………………………………………………………………………………………………………………………………  
+---
+PAGE 43: Prerequisites:  ➢   General information on digital sequences (1bacse), Limits...  Expected skills:  ➢   Use geometric sequences and arithmetic sequences to study examples of the form:   𝑢 𝑛 + 1   =   𝑎 𝑢 𝑛   +   𝑏 ;   𝑢 𝑛 + 1   =   𝑎 𝑢 𝑛 + 𝑏  𝑐 𝑢 𝑛 + 𝑑 and  other recurring sequences.  ➢   Use reference sequences and convergence criteria to determine the limits of numerical sequence
+---
+PAGE 54: Logarithm functions  Prerequisites:  ➢   Limits, continuity, study of a function...  Expected skills:  ➢   Master algebraic calculation on logarithms;  ➢   Master the resolution of equations, inequalities and systems involving logarithms;  ➢   Recognize and apply the decimal logarithm (especially for solving equations of the form   10 𝑥   =   𝑎 and inequalities of the  form   10 𝑥   ≤   𝑎 or  
+---
+PAGE 56: Chapter   6:   Logarithmic Functions  I -   Natural logarithm function:  1 -   Introduction :  The function   𝑥   ↦   1  𝑥 is continuous on   ℝ +  ∗   =   ] 0 ;   + ∞ [ , so   it admits a primitive on the interval   ] 0 ;   + ∞ [ .  So, it admits a unique primitive on   ] 0 ;   + ∞ [ which vanishes at 1.  This function is called   the natural logarithm function   and denoted   ln.  Definition : 
+---
+PAGE 69: Prerequisites:  ➢   Sets of numbers, operations in   ℝ , remarkable identities, second degree equations with one unknown, transformation in  the plane, barycenter, etc.  Expected skills:  ➢   Master calculations on complex numbers;  ➢   Switch from algebraic to trigonometric writing of a complex number and vice versa;  ➢   Recognize basic trigonometric formulas using complex numbers;  ➢   Lineariz
+---
+PAGE 71: Chapter   7:   Complex Numbers  I -   The set of complex numbers:  1 -   The whole ℂ   :  Theorem:  There is a set that we denote by   ℂ and call   the set of complex numbers   and which has the following properties:  has)   ℝ   ⊂   ℂ  b)   There is a number in   ℂ which we note by   𝒊 verifying 𝒊 𝟐   =   − 𝟏  c)   ( ∀ 𝒛   ∈   ℂ ) ( ∃ !   𝒙 ,   𝒚   ∈   ℝ ) / 𝒛   =   𝒙   +   𝒊𝒚  d)   The
+---
+PAGE 93: Prerequisites:  ➢   Limits, continuity, study of a function, study of logarithmic functions, etc.  Expected skills:  ➢   Master the resolution of equations, inequalities and systems involving exponentials;  ➢   essential   exponential   limits ;  ➢   Study and represent functions whose expression includes the   natural exponential function   ;  ➢   Study and represent functions whose expression in
+---
+PAGE 94: Chapter   8:   Exponential Functions  I -   Natural exponential function:  1 -   Definition :  The function   𝒍𝒏 is continuous and strictly increasing on   ] 0 ,   + ∞ [ , so it admits an inverse function on the  interval 𝐽   =   𝑙𝑛   ( ] 0 ,   + ∞ [ )   = ]   lim  𝑥 ⟶ 0 +   𝑙𝑛 ( 𝑥 )   ,   lim  𝑥 ⟶ + ∞   𝑙𝑛 ( 𝑥 )   [ = ]   −   ∞ ,   + ∞ [ =   ℝ  It is called   the exponential function
+---
+PAGE 106: Prerequisites:  ➢   Second degree equations with one unknown, derivative function,  Expected skills:  ➢   Solve the differential equation 𝑦 ’   =   𝑎𝑦   +   𝑏  ➢   Solve the differential equation 𝑦 ′′   +   𝑎 𝑦 ′   +   𝑏𝑦   =   0  ➢   Solve differential equations that reduce to the previous equations.  Extensions:  ➢   Physics, Electricity, Mechanics, …  Educational recommendations:  ➢   
+---
+PAGE 107: Chapter   9:   Differential Equations  I -   First degree linear differential equations:  1 -   Definition :  Let 𝑎 ,   𝑏   ∈   ℝ  1)   The equation   ( 𝑬 ) :   𝒚 ′   =   𝒂𝒚   +   𝒃 is called   a first - degree linear differential equation   ; where y is the unknown  function and   𝑦 ’ its derivative function.  2)   We call a solution to equation   (E) any function   𝑓 that is differentia
+---
+PAGE 109: Prerequisites:  ➢   Continuity, primitives,  Expected skills:  ➢   Calculate the integral of functions using both techniques;  ➢   Master the calculation of the area of a plane domain limited by two curves and two straight lines parallel to the ordinate  axis;  ➢   Calculate the volume of a solid generated by the rotation of the curve of a function around the abscissa axis.  Extensions:  ➢   Calcu
+---
+PAGE 110: Chapter   10:   Integral Calculus  I -   Integral of a continuous function over an interval:  1 -   Introduction   :  Let   𝑓 the numerical function be defined on   ℝ by: 𝑓 ( 𝑥 )   =   5 𝑥 4   +   1  Let us determine the set of primitive functions of   𝑓 on ℝ  ∀ 𝑥   ∈   ℝ :   𝐹 ( 𝑥 )   =   𝑥 5   +   𝑥   +   𝐶   with   It is   a real constant.  Let us determine   𝐺 a primitive function 
+---
