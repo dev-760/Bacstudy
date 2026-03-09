@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { renderMath } from "./MathRenderer";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
     role: "user" | "assistant";
@@ -14,24 +15,29 @@ interface Props {
     accentColor?: string;
 }
 
-export default function AIChat({ context, lessonTitle, accentColor = "#4f8cf7" }: Props) {
-    const [open, setOpen] = useState(false);
+export default function AIChat({ context, lessonTitle, accentColor = "#2463eb" }: Props) {
+    const [chatActive, setChatActive] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
-    }, [messages]);
+        if (chatActive && scrollRef.current) {
+            scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+        }
+    }, [messages, chatActive]);
 
     const send = async (text?: string) => {
+        if (!chatActive) setChatActive(true);
         const msg = text || input.trim();
         if (!msg || loading) return;
         setInput("");
+
         const newMsgs: Message[] = [...messages, { role: "user", content: msg }];
         setMessages(newMsgs);
         setLoading(true);
+
         try {
             const contextMsg = context ? `[Context: Student is studying "${lessonTitle}". ${context}]\n\n` : "";
             const res = await fetch("/api/ai", {
@@ -55,140 +61,107 @@ export default function AIChat({ context, lessonTitle, accentColor = "#4f8cf7" }
         setLoading(false);
     };
 
-    const quickActions = [
-        { label: "📝 Explain this topic", msg: `Explain the key concepts of "${lessonTitle || "this topic"}" simply, as if I'm a beginner.` },
-        { label: "🧠 Give me a tip", msg: `Give me an exam tip for "${lessonTitle || "this topic"}" - something that will help me score marks in the national exam.` },
-        { label: "❓ Practice question", msg: `Give me a practice question about "${lessonTitle || "this topic"}" with the answer and explanation.` },
-    ];
-
-    const fabStyle: React.CSSProperties = {
-        position: "fixed", bottom: 24, right: 24, width: 56, height: 56, borderRadius: "50%",
-        background: `linear-gradient(135deg, ${accentColor}, #a855f7)`,
-        color: "#fff", fontSize: 24, display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 4px 20px rgba(79,140,247,0.4)", cursor: "pointer", zIndex: 1000,
-        transition: "all 0.3s", border: "none",
-    };
-
-    const panelStyle: React.CSSProperties = {
-        position: "fixed", bottom: 24, right: 24, width: "min(420px, calc(100vw - 32px))",
-        height: "min(600px, calc(100vh - 100px))", borderRadius: 20,
-        background: "rgba(12, 12, 20, 0.97)", border: "1px solid rgba(255,255,255,0.08)",
-        backdropFilter: "blur(20px)", display: "flex", flexDirection: "column",
-        zIndex: 1001, boxShadow: "0 8px 40px rgba(0,0,0,0.5)", overflow: "hidden",
-    };
-
-    if (!open) {
+    if (!chatActive) {
         return (
-            <button style={fabStyle} onClick={() => setOpen(true)} title="AI Study Assistant">
-                🤖
-            </button>
+            <div className="bg-primary/5 dark:bg-primary/10 p-6 rounded-xl border border-primary/20 flex-1 flex flex-col items-center justify-center text-center shadow-sm w-full">
+                <div className="size-16 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-md border-2 border-primary/20 mb-4 motion-safe:animate-bounce">
+                    <span className="material-symbols-outlined text-3xl text-primary">smart_toy</span>
+                </div>
+                <h3 className="font-bold text-slate-900 dark:text-white text-lg">EduTutor AI</h3>
+                <p className="text-slate-500 text-xs mb-6 max-w-[200px]">Need help with {lessonTitle?.split(' ')[0] || "this"} concepts? Ask your AI tutor.</p>
+                <button
+                    onClick={() => setChatActive(true)}
+                    className="w-full py-3 bg-white dark:bg-slate-900 text-primary font-bold rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors flex items-center justify-center gap-2 active:scale-95"
+                >
+                    <span className="material-symbols-outlined text-[18px]">chat</span> Start Chat
+                </button>
+            </div>
         );
     }
 
     return (
-        <div style={panelStyle}>
+        <div className="flex flex-col bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex-1 w-full max-h-[600px] lg:max-h-none h-full">
             {/* Header */}
-            <div style={{
-                padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)",
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                background: "rgba(255,255,255,0.02)",
-            }}>
-                <div>
-                    <div style={{ fontWeight: 700, fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 20 }}>🤖</span> BACStudy AI
-                        <span style={{
-                            fontSize: "0.6rem", padding: "2px 8px", borderRadius: 8,
-                            background: "rgba(52,211,153,0.15)", color: "#34d399", fontWeight: 600,
-                        }}>ONLINE</span>
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 border-t-0 dark:bg-slate-800/50">
+                <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary relative">
+                        <span className="material-symbols-outlined text-[18px]">smart_toy</span>
+                        <div className="absolute top-0 -right-1 size-2.5 bg-emerald-500 rounded-full border border-white dark:border-slate-900"></div>
                     </div>
-                    <p style={{ fontSize: "0.72rem", color: "#6b7280", marginTop: 2 }}>Your AI study assistant</p>
+                    <div>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-none">EduTutor AI</h4>
+                        <span className="text-[10px] font-bold text-emerald-500">Online</span>
+                    </div>
                 </div>
-                <button onClick={() => setOpen(false)} style={{
-                    width: 32, height: 32, borderRadius: 8, background: "rgba(255,255,255,0.05)",
-                    color: "#9ca3af", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
-                    border: "none", cursor: "pointer",
-                }}>✕</button>
+                <button
+                    onClick={() => setChatActive(false)}
+                    className="size-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                >
+                    <span className="material-symbols-outlined text-[18px]">close</span>
+                </button>
             </div>
 
-            {/* Messages */}
-            <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+            {/* Messages Area */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50/50 dark:bg-slate-900/50">
                 {messages.length === 0 && (
-                    <div style={{ textAlign: "center", padding: "30px 10px" }}>
-                        <div style={{ fontSize: 40, marginBottom: 12 }}>🎓</div>
-                        <h3 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 6 }}>How can I help you study?</h3>
-                        <p style={{ fontSize: "0.78rem", color: "#6b7280", marginBottom: 20 }}>
-                            Ask me anything about your lessons, or use quick actions below
-                        </p>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                            {quickActions.map((a, i) => (
-                                <button key={i} onClick={() => send(a.msg)} style={{
-                                    padding: "10px 14px", borderRadius: 12, fontSize: "0.78rem", fontWeight: 500,
-                                    background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-                                    color: "#c4c8d4", textAlign: "left", cursor: "pointer", transition: "all 0.2s",
-                                }}>{a.label}</button>
-                            ))}
+                    <div className="flex flex-col items-center justify-center h-full text-center p-4">
+                        <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-3 block">waving_hand</span>
+                        <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Hi there!</p>
+                        <p className="text-xs text-slate-500 mt-1 max-w-[200px]">I'm here to help you master {lessonTitle}. What would you like to know?</p>
+
+                        <div className="mt-6 flex flex-col w-full gap-2">
+                            <button onClick={() => send("Explain this topic simply.")} className="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 text-left hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                📝 Explain this topic simply
+                            </button>
+                            <button onClick={() => send("Give me a challenging practice question.")} className="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 text-left hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                ❓ Give me a practice question
+                            </button>
                         </div>
                     </div>
                 )}
+
                 {messages.map((m, i) => (
-                    <div key={i} style={{
-                        alignSelf: m.role === "user" ? "flex-end" : "flex-start",
-                        maxWidth: "88%",
-                    }}>
-                        <div style={{
-                            padding: "10px 14px", borderRadius: 14,
-                            background: m.role === "user"
-                                ? `linear-gradient(135deg, ${accentColor}, #a855f7)`
-                                : "rgba(255,255,255,0.04)",
-                            border: m.role === "user" ? "none" : "1px solid rgba(255,255,255,0.06)",
-                            fontSize: "0.82rem", lineHeight: 1.6, color: m.role === "user" ? "#fff" : "#d4d8e4",
-                        }}>
+                    <div key={i} className={`flex max-w-[85%] ${m.role === "user" ? "self-end" : "self-start"}`}>
+                        <div className={`p-3 rounded-2xl text-sm ${m.role === "user"
+                                ? "bg-primary text-white rounded-tr-sm shadow-md"
+                                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-tl-sm shadow-sm"
+                            }`}>
                             {m.role === "assistant" ? (
-                                <div className="lesson-html" dangerouslySetInnerHTML={{ __html: renderMath(m.content.replace(/\n/g, "<br/>")) }} />
-                            ) : m.content.length > 100 ? m.content.substring(0, 100) + "..." : m.content}
+                                <div className="prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 marker:text-primary" dangerouslySetInnerHTML={{ __html: renderMath(m.content.replace(/\n/g, "<br/>")) }} />
+                            ) : (
+                                m.content
+                            )}
                         </div>
                     </div>
                 ))}
+
                 {loading && (
-                    <div style={{ alignSelf: "flex-start", padding: "10px 14px", borderRadius: 14, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", fontSize: "0.82rem", color: "#6b7280" }}>
-                        <span className="ai-dots">Thinking<span>.</span><span>.</span><span>.</span></span>
-                        <style jsx>{`
-              .ai-dots span { animation: dotPulse 1.4s infinite; opacity: 0; }
-              .ai-dots span:nth-child(1) { animation-delay: 0s; }
-              .ai-dots span:nth-child(2) { animation-delay: 0.2s; }
-              .ai-dots span:nth-child(3) { animation-delay: 0.4s; }
-              @keyframes dotPulse { 0%,80%,100% { opacity: 0 } 40% { opacity: 1 } }
-            `}</style>
+                    <div className="self-start max-w-[85%] flex">
+                        <div className="px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        </div>
                     </div>
                 )}
             </div>
 
-            {/* Input */}
-            <div style={{
-                padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)",
-                display: "flex", gap: 8, background: "rgba(255,255,255,0.02)",
-            }}>
+            {/* Input Area */}
+            <div className="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && send()}
-                    placeholder="Ask me anything..."
-                    style={{
-                        flex: 1, padding: "10px 14px", borderRadius: 12, fontSize: "0.82rem",
-                        background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-                        color: "#f0f0f5", outline: "none",
-                    }}
+                    placeholder="Type your question..."
+                    className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm rounded-full px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all border border-transparent focus:border-primary/30"
                 />
                 <button
                     onClick={() => send()}
                     disabled={loading || !input.trim()}
-                    style={{
-                        padding: "10px 16px", borderRadius: 12, fontWeight: 600, fontSize: "0.82rem",
-                        background: loading || !input.trim() ? "rgba(255,255,255,0.05)" : `linear-gradient(135deg, ${accentColor}, #a855f7)`,
-                        color: loading || !input.trim() ? "#6b7280" : "#fff",
-                        border: "none", cursor: loading ? "wait" : "pointer", transition: "all 0.2s",
-                    }}
-                >Send</button>
+                    className="size-10 rounded-full bg-primary flex items-center justify-center text-white disabled:opacity-50 disabled:bg-slate-300 dark:disabled:bg-slate-700 transition-colors shrink-0"
+                >
+                    <span className="material-symbols-outlined text-[18px]">send</span>
+                </button>
             </div>
         </div>
     );

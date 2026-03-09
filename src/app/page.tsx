@@ -1,230 +1,228 @@
 "use client";
 
 import ClientLayout from "@/components/ClientLayout";
-import CountdownTimer from "@/components/CountdownTimer";
-import SubjectCard from "@/components/SubjectCard";
 import { subjects, getStudyStats, getDaysRemaining } from "@/data/subjects";
 import { useProgress } from "@/context/ProgressContext";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import CountdownTimer from "@/components/CountdownTimer";
 
 function Dashboard() {
   const { getOverallProgress, progress } = useProgress();
   const { totalLessons, totalQuizQuestions } = getStudyStats();
+  const { user } = useAuth();
   const overall = getOverallProgress();
   const days = getDaysRemaining();
 
-  const quizScores = Object.values(progress)
-    .filter((p) => p.quizScore != null)
-    .map((p) => p.quizScore as number);
+  const quizScores = Object.values(progress).filter((p) => p.quizScore != null).map((p) => p.quizScore as number);
   const avgScore = quizScores.length > 0 ? Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length) : 0;
-  const remaining = totalLessons - overall.completed;
-  const daily = days > 0 ? Math.max(1, Math.ceil(remaining / days)) : remaining;
-
-  const stats = [
-    { icon: "📚", value: `${overall.completed}/${totalLessons}`, label: "Lessons Done", color: "#3b82f6" },
-    { icon: "📊", value: `${overall.percentage}%`, label: "Progress", color: "#8b5cf6" },
-    { icon: "✅", value: `${quizScores.length}`, label: "Quizzes Taken", color: "#10b981" },
-    { icon: "⭐", value: `${avgScore}%`, label: "Avg Score", color: "#f59e0b" },
-  ];
+  const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "Student";
 
   return (
-    <div className="page-wrapper">
-      {/* Background Orbs */}
-      <div style={{
-        position: "absolute", top: -150, right: -100, width: 500, height: 500,
-        background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)",
-        pointerEvents: "none", zIndex: 0
-      }} />
-      <div style={{
-        position: "absolute", top: 200, left: -200, width: 400, height: 400,
-        background: "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 60%)",
-        pointerEvents: "none", zIndex: 0
-      }} />
-
-      {/* Hero Section */}
-      <section style={{ padding: "60px 0 40px", position: "relative", zIndex: 1 }}>
-        <div className="hero-grid">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            style={{ position: "relative" }}
-          >
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px", marginBottom: 16,
-              background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)",
-              borderRadius: 30, fontSize: "0.78rem", fontWeight: 600, color: "#60a5fa",
-              boxShadow: "0 4px 12px rgba(59,130,246,0.1)"
-            }}>
-              <span className="pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#60a5fa" }} />
-              2BAC Physical Science — English Option
+    <div className="flex flex-1 flex-col lg:flex-row w-full min-h-screen">
+      {/* Sidebar Navigation */}
+      <aside className="w-full lg:w-64 flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shrink-0 shadow-sm z-10">
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-3 px-2">
+            <div className="bg-primary/10 rounded-full size-12 flex items-center justify-center overflow-hidden border border-primary/20 text-primary font-bold text-lg">
+              {firstName[0]?.toUpperCase() || "S"}
             </div>
-            <h1 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, letterSpacing: -0.03 + "em", lineHeight: 1.1, marginBottom: 16 }}>
-              Unlock Your <br/>
-              <span className="text-gradient">
-                Highest Potential
-              </span>
-            </h1>
-            <p style={{ color: "var(--text-secondary)", fontSize: "1rem", lineHeight: 1.6, maxWidth: 500, marginBottom: 24 }}>
-              <strong style={{ color: "#fff" }}>{days} days</strong> until the national exam. Complete{" "}
-              <strong style={{ color: "#fff" }}>{daily} lesson{daily > 1 ? "s" : ""} a day</strong> and guarantee your success. Stay consistent.
+            <div className="flex flex-col">
+              <h1 className="text-slate-900 dark:text-slate-100 text-sm font-bold truncate max-w-[150px]">{user?.user_metadata?.full_name || "Guest User"}</h1>
+              <p className="text-slate-500 text-xs">2BAC • English Option</p>
+            </div>
+          </div>
+
+          <nav className="flex flex-col gap-1">
+            <Link href="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white shadow-md shadow-primary/20 hover:bg-primary/90 transition-colors">
+              <span className="material-symbols-outlined text-[22px]">dashboard</span>
+              <span className="text-sm font-medium">Dashboard</span>
+            </Link>
+            <Link href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+              <span className="material-symbols-outlined text-[22px]">book</span>
+              <span className="text-sm font-medium">Courses</span>
+            </Link>
+            <Link href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+              <span className="material-symbols-outlined text-[22px]">folder_open</span>
+              <span className="text-sm font-medium">Resources</span>
+            </Link>
+            <Link href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+              <span className="material-symbols-outlined text-[22px]">grade</span>
+              <span className="text-sm font-medium">Grades</span>
+            </Link>
+          </nav>
+
+          <div className="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 shadow-inner">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="material-symbols-outlined text-primary text-[20px]">lightbulb</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Top Tip</span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed italic">"Try the Pomodoro technique: 25 mins study, 5 mins break to maintain focus and maximize retention."</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        {/* Welcome Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Academic Overview</h2>
+            <p className="text-slate-500">Welcome back, {firstName}! Keep pushing forward.</p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+            <span className="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+          </motion.div>
+        </div>
+
+        {/* Glassmorphic Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-panel flex flex-col gap-2 rounded-xl p-5 shadow-sm border-white/50 dark:border-slate-700/50">
+            <div className="flex justify-between items-start">
+              <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Overall Progress</p>
+              <span className="material-symbols-outlined text-primary opacity-50">trending_up</span>
+            </div>
+            <p className="text-slate-900 dark:text-slate-100 text-3xl font-bold">{overall.percentage}%</p>
+            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-1">
+              <div className="bg-primary h-full rounded-full transition-all duration-1000" style={{ width: `${overall.percentage}%` }}></div>
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-panel flex flex-col gap-2 rounded-xl p-5 shadow-sm border-white/50 dark:border-slate-700/50">
+            <div className="flex justify-between items-start">
+              <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Lessons Done</p>
+              <span className="material-symbols-outlined text-primary opacity-50">school</span>
+            </div>
+            <p className="text-slate-900 dark:text-slate-100 text-3xl font-bold">{overall.completed} <span className="text-lg text-slate-500 font-medium">/ {totalLessons}</span></p>
+            <p className="text-green-600 dark:text-green-400 text-xs font-bold flex items-center gap-1 mt-1">
+              <span className="material-symbols-outlined text-[14px]">play_circle</span> Keep building momentum
             </p>
           </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
-            <CountdownTimer />
+
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-panel flex flex-col gap-2 rounded-xl p-5 shadow-sm border-white/50 dark:border-slate-700/50">
+            <div className="flex justify-between items-start">
+              <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Quiz Average</p>
+              <span className="material-symbols-outlined text-primary opacity-50">verified</span>
+            </div>
+            <p className="text-slate-900 dark:text-slate-100 text-3xl font-bold">{avgScore}%</p>
+            <p className="text-slate-500 text-xs mt-1">{quizScores.length} quizzes taken</p>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="glass-panel flex flex-col gap-2 rounded-xl p-5 shadow-sm border-white/50 dark:border-slate-700/50">
+            <div className="flex justify-between items-start">
+              <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">Exam Goal</p>
+              <span className="material-symbols-outlined text-primary opacity-50">flag</span>
+            </div>
+            <p className="text-slate-900 dark:text-slate-100 text-3xl font-bold">{days}</p>
+            <p className="text-slate-500 text-xs mt-1">Days remaining to National Exam</p>
           </motion.div>
         </div>
-      </section>
 
-      {/* Stats Section */}
-      <section style={{ marginBottom: 48, position: "relative", zIndex: 1 }}>
-        <div className="stats-grid">
-          {stats.map((s, i) => (
-            <motion.div 
-              key={i} 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="glass-panel"
-              style={{
-                display: "flex", alignItems: "center", gap: 16,
-                padding: "20px 24px", 
-              }}
-            >
-              <div style={{
-                width: 48, height: 48, borderRadius: 14,
-                background: `linear-gradient(135deg, ${s.color}15, ${s.color}05)`, 
-                border: `1px solid ${s.color}30`,
-                color: s.color,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "1.4rem", flexShrink: 0,
-                boxShadow: `0 8px 16px ${s.color}10`
-              }}>
-                {s.icon}
-              </div>
-              <div>
-                <div style={{ fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#fff" }}>{s.value}</div>
-                <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: 4, fontWeight: 500 }}>{s.label}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: Courses */}
+          <div className="lg:col-span-2 space-y-6">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 px-1 border-b border-slate-200 dark:border-slate-800 pb-2">Subject Progress</h3>
 
-      {/* Subjects Grid */}
-      <section style={{ marginBottom: 60, position: "relative", zIndex: 1 }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 24 }}>
-          <div>
-            <h2 style={{ fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.02em", color: "#fff", marginBottom: 6 }}>Your Subjects</h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Select a module to continue studying</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {subjects.map((subject, idx) => {
+                const subjectLessons = subject.lessons.map(l => progress[l.id]);
+                const completed = subjectLessons.filter(p => p?.completed).length;
+                const total = subject.lessons.length;
+                const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+                return (
+                  <motion.div
+                    key={subject.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + idx * 0.1 }}
+                  >
+                    <Link href={`/subject/${subject.id}`} className="block h-full bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="size-10 rounded-lg flex items-center justify-center text-xl shadow-sm border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 group-hover:scale-110 transition-transform">
+                          {subject.icon}
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">{subject.name}</h4>
+                          <p className="text-xs text-slate-500">Coeff: {subject.examCoefficient} • {total} Modules</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs font-medium">
+                          <span className="text-slate-600 dark:text-slate-400">Mastery</span>
+                          <span className="text-slate-900 dark:text-slate-100">{pct}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%`, background: subject.gradient }}></div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider border border-slate-200 dark:border-slate-700">
+                          {total - completed} Lessons Left
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right Column: Exam Countdown & Schedule */}
+          <div className="flex flex-col gap-6">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+
+              <div className="flex items-center gap-2 mb-6 text-primary">
+                <span className="material-symbols-outlined">timer</span>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">Exam Countdown</h3>
+              </div>
+
+              <div className="flex justify-center my-4">
+                <CountdownTimer />
+              </div>
+
+              <p className="text-xs text-slate-500 text-center mt-6 italic bg-slate-50 dark:bg-slate-800/50 py-2 rounded-lg border border-slate-100 dark:border-slate-800">2BAC Physical Science — National Exam</p>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100">Study Plan</h3>
+                <button className="text-primary text-xs font-bold hover:underline">Revise</button>
+              </div>
+
+              <div className="space-y-5">
+                <div className="relative pl-6 border-l-2 border-slate-100 dark:border-slate-800">
+                  <div className="absolute -left-[9px] top-0 size-4 rounded-full bg-primary border-4 border-white dark:border-slate-900"></div>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Math Focus</p>
+                      <p className="text-[10px] text-slate-500 mt-0.5">Complete Limits section</p>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded">High Prio</span>
+                  </div>
+                </div>
+
+                <div className="relative pl-6 border-l-2 border-slate-100 dark:border-slate-800">
+                  <div className="absolute -left-[9px] top-0 size-4 rounded-full bg-slate-300 dark:bg-slate-700 border-4 border-white dark:border-slate-900"></div>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Physics Past Exam</p>
+                      <p className="text-[10px] text-slate-500 mt-0.5">Attempt Mechanics 2021</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="subjects-grid">
-          {subjects.map((s, i) => (
-            <motion.div
-              key={s.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-            >
-              <SubjectCard subject={s} />
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Motivational Banner */}
-      <section style={{ position: "relative", zIndex: 1 }}>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="glass-panel"
-          style={{
-            padding: "40px 32px", textAlign: "center",
-            background: "linear-gradient(135deg, rgba(59,130,246,0.05), rgba(139,92,246,0.05))",
-            position: "relative", overflow: "hidden"
-          }}
-        >
-          {/* Decorative blur */}
-          <div style={{ position: "absolute", top: -50, left: "50%", transform: "translateX(-50%)", width: 200, height: 100, background: "var(--purple)", filter: "blur(80px)", opacity: 0.15, pointerEvents: "none" }} />
-          
-          <div style={{ fontSize: "2.5rem", marginBottom: 12, animation: "float 4s ease-in-out infinite" }}>🚀</div>
-          <h3 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#fff", marginBottom: 12 }}>You Are Capable of Greatness</h3>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.6, maxWidth: 600, margin: "0 auto 28px" }}>
-            Whether you&apos;re revising or starting from zero, the secret is <strong style={{ color: "#fff" }}>consistency</strong>.<br/>
-            Study focused blocks, test your knowledge, and trust the process.
-          </p>
-          
-          <div className="tips-row">
-            {[
-              { icon: "🎯", text: "Prioritize High-Coeff Subjects" },
-              { icon: "⏱️", text: "Use the Pomodoro Technique" },
-              { icon: "🔄", text: "Test Yourself Repeatedly" },
-              { icon: "📱", text: "Stay Away From Distractions" },
-            ].map((tip, i) => (
-              <div key={i} style={{
-                padding: "12px 16px", background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12,
-                fontSize: "0.85rem", color: "var(--text-secondary)", textAlign: "left",
-                display: "flex", alignItems: "center", gap: 10,
-                transition: "all 0.2s", cursor: "default"
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
-              onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
-              >
-                <span style={{ fontSize: "1.1rem" }}>{tip.icon}</span>
-                <span style={{ fontWeight: 500 }}>{tip.text}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
-      <style jsx global>{`
-        .hero-grid {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 48px;
-          align-items: center;
-        }
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 16px;
-        }
-        .subjects-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 16px;
-        }
-        .tips-row {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-          max-width: 650px;
-          margin: 0 auto;
-        }
-        .pulse-dot {
-          animation: pulseGlow 2s infinite;
-        }
-        
-        @media (max-width: 992px) {
-          .hero-grid { grid-template-columns: 1fr; text-align: center; justify-items: center; }
-          .hero-grid > div:first-child { align-items: center; display: flex; flex-direction: column; }
-          .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 640px) {
-          .stats-grid { grid-template-columns: 1fr; }
-          .tips-row { grid-template-columns: 1fr; }
-        }
-      `}</style>
+      </main>
     </div>
   );
 }

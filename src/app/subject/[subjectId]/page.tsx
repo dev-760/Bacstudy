@@ -6,146 +6,199 @@ import { subjects } from "@/data/subjects";
 import { useProgress } from "@/context/ProgressContext";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { motion } from "framer-motion";
 
 function SubjectContent({ subjectId }: { subjectId: string }) {
   const subject = subjects.find((s) => s.id === subjectId);
   const { getProgress } = useProgress();
   if (!subject) return notFound();
 
+  const lessons = subject.lessons;
+  const completedCount = lessons.filter(l => getProgress(l.id)?.completed).length;
+  const progressPct = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
+
   return (
-    <div className="page-wrapper" style={{ paddingTop: 24 }}>
-      {/* Glow */}
-      <div style={{
-        position: "fixed", top: -150, left: -100, width: 400, height: 400,
-        background: `radial-gradient(circle, ${subject.color}08, transparent 70%)`,
-        pointerEvents: "none", zIndex: 0,
-      }} />
+    <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-6">
+        <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1">
+          <span className="material-symbols-outlined text-[16px]">home</span>
+          Dashboard
+        </Link>
+        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span>Subjects</span>
+        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span className="text-slate-900 dark:text-slate-100">{subject.name}</span>
+      </nav>
 
-      {/* Back */}
-      <Link href="/" style={{ fontSize: "0.82rem", color: "#6b7280", display: "inline-block", marginBottom: 16, transition: "color 0.2s" }}>
-        ← Dashboard
-      </Link>
-
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 32, position: "relative", zIndex: 1 }}>
-        <div style={{
-          width: 56, height: 56, borderRadius: 16, background: subject.gradient,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "1.6rem", flexShrink: 0,
-        }}>
-          {subject.icon}
+      {/* Hero Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-8 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-5">
+          <div
+            className="size-16 md:size-20 rounded-2xl flex items-center justify-center text-3xl md:text-4xl shadow-md border border-white/20"
+            style={{ background: subject.gradient, color: '#fff' }}
+          >
+            {subject.icon}
+          </div>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+              {subject.name}
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 max-w-xl text-sm md:text-base">
+              {subject.description}
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 style={{ fontSize: "clamp(1.4rem, 4vw, 1.8rem)", fontWeight: 900, letterSpacing: -0.5, marginBottom: 4 }}>
-            {subject.name}
-          </h1>
-          <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: 10 }}>{subject.description}</p>
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            {[
-              { icon: "📚", text: `${subject.lessons.length} lessons` },
-              { icon: "⚖️", text: `Coefficient ${subject.examCoefficient}` },
-              { icon: "✅", text: `${subject.lessons.filter(l => getProgress(l.id)?.completed).length} completed` },
-            ].map((m, i) => (
-              <span key={i} style={{ fontSize: "0.78rem", color: "#6b7280" }}>{m.icon} {m.text}</span>
-            ))}
+        <div className="flex items-center gap-3 bg-white dark:bg-slate-900 p-2 pr-4 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm shrink-0">
+          <div className="size-10 rounded-full flex items-center justify-center bg-primary/10 text-primary font-bold">
+            {subject.examCoefficient}
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Exam Coeff</span>
+            <span className="text-sm font-bold text-slate-900 dark:text-white">High Priority</span>
           </div>
         </div>
       </div>
 
-      {/* Lessons */}
-      {subject.lessons.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "60px 24px", color: "#6b7280" }}>
-          <div style={{ fontSize: "2.5rem", marginBottom: 8 }}>📂</div>
-          <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#9ca3af", marginBottom: 6 }}>No lessons yet</h3>
-          <p style={{ fontSize: "0.85rem" }}>Coming soon!</p>
-        </div>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {subject.lessons.map((lesson, idx) => {
-            const p = getProgress(lesson.id);
-            const isDone = p?.completed;
-            const qs = p?.quizScore;
-            const sTotal = lesson.sections.length;
-            const sDone = p?.sectionsCompleted?.length || 0;
-            const sPct = Math.round((sDone / sTotal) * 100);
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Progress & Modules */}
+        <div className="lg:col-span-2 space-y-8">
 
-            return (
-              <Link key={lesson.id} href={`/subject/${subjectId}/lesson/${lesson.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <div className="lesson-row" style={{
-                  display: "flex", alignItems: "center", gap: 14,
-                  padding: "16px 18px", background: "rgba(255,255,255,0.02)",
-                  border: `1px solid ${isDone ? `${subject.color}20` : "rgba(255,255,255,0.06)"}`,
-                  borderRadius: 15, transition: "all 0.3s", cursor: "pointer",
-                }}>
-                  {/* Number */}
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 10,
-                    background: isDone ? subject.color : "rgba(255,255,255,0.04)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontWeight: 700, fontSize: isDone ? "0.9rem" : "0.85rem",
-                    color: isDone ? "#fff" : "#6b7280", flexShrink: 0,
-                    transition: "all 0.2s",
-                  }}>
-                    {isDone ? "✓" : idx + 1}
-                  </div>
+          {/* Progress Card */}
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+            <div className="flex-1 w-full">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Your Progress</h3>
+              <div className="flex items-end gap-3 mb-3">
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">{progressPct}%</span>
+                <span className="text-sm font-medium text-slate-500 pb-1">{completedCount} of {lessons.length} lessons completed</span>
+              </div>
+              <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700/50">
+                <div className="h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progressPct}%`, background: subject.gradient }}></div>
+              </div>
+            </div>
+            <button className="w-full md:w-auto px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-md transition-transform active:scale-95 shrink-0 whitespace-nowrap">
+              {progressPct === 0 ? "Start Learning" : progressPct === 100 ? "Review All" : "Resume Course"}
+            </button>
+          </motion.div>
 
-                  {/* Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: 3, lineHeight: 1.3 }}>{lesson.title}</h3>
-                    <div style={{ display: "flex", gap: 8, fontSize: "0.72rem", color: "#6b7280", flexWrap: "wrap" }}>
-                      <span>{sTotal} sections</span>
-                      <span>·</span>
-                      <span>{lesson.quiz.length} quiz</span>
-                      {qs != null && (
-                        <>
-                          <span>·</span>
-                          <span style={{ color: qs >= 80 ? "#34d399" : qs >= 50 ? "#facc15" : "#ef4444" }}>
-                            Score: {qs}%
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
+          {/* Chapters List */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Course Modules</h3>
+              <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold rounded-full border border-slate-200 dark:border-slate-700">
+                {lessons.length} Total
+              </span>
+            </div>
 
-                  {/* Progress Ring */}
-                  <div style={{ position: "relative", width: 38, height: 38, flexShrink: 0 }} className="hide-mobile">
-                    <svg width="38" height="38" viewBox="0 0 38 38">
-                      <circle cx="19" cy="19" r="16" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="2.5" />
-                      <circle cx="19" cy="19" r="16" fill="none" stroke={subject.color} strokeWidth="2.5"
-                        strokeDasharray={`${2 * Math.PI * 16}`}
-                        strokeDashoffset={`${2 * Math.PI * 16 * (1 - sPct / 100)}`}
-                        strokeLinecap="round" transform="rotate(-90 19 19)"
-                        style={{ transition: "all 0.5s ease" }}
-                      />
-                    </svg>
-                    <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 700, color: subject.color }}>
-                      {sPct}%
-                    </span>
-                  </div>
-
-                  <span style={{ color: "#6b7280", fontSize: "0.9rem", flexShrink: 0, transition: "all 0.2s" }} className="arrow-icon">→</span>
+            <div className="space-y-3">
+              {lessons.length === 0 ? (
+                <div className="text-center py-12 px-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-dashed rounded-2xl">
+                  <div className="text-4xl mb-4">📂</div>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">No Content Yet</h3>
+                  <p className="text-sm text-slate-500 max-w-sm mx-auto">Lessons for this subject are currently being prepared. Check back later.</p>
                 </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+              ) : (
+                lessons.map((lesson, idx) => {
+                  const p = getProgress(lesson.id);
+                  const isDone = p?.completed;
+                  const qs = p?.quizScore;
 
-      <style jsx global>{`
-        .lesson-row:hover {
-          transform: translateX(3px);
-          border-color: rgba(255,255,255,0.1) !important;
-          background: rgba(255,255,255,0.035) !important;
-        }
-        .lesson-row:hover .arrow-icon {
-          color: ${subject.color} !important;
-          transform: translateX(3px);
-        }
-        @media (max-width: 600px) {
-          .hide-mobile { display: none !important; }
-        }
-      `}</style>
-    </div>
+                  return (
+                    <motion.div key={lesson.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 }}>
+                      <Link href={`/subject/${subjectId}/lesson/${lesson.id}`} className="group block p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:border-primary/50 hover:shadow-md transition-all">
+                        <div className="flex items-center gap-4 relative">
+                          {/* Status Icon */}
+                          <div className={`size-12 rounded-full flex items-center justify-center border-2 shrink-0 transition-colors ${isDone ? 'bg-emerald-50 border-emerald-200 text-emerald-500 dark:bg-emerald-500/10 dark:border-emerald-500/20' : 'bg-slate-50 border-slate-200 text-slate-400 dark:bg-slate-800 dark:border-slate-700'}`}>
+                            {isDone ? <span className="material-symbols-outlined font-bold">check</span> : <span className="font-bold text-sm">{idx + 1}</span>}
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <h4 className={`text-base font-bold truncate transition-colors ${isDone ? 'text-slate-700 dark:text-slate-300' : 'text-slate-900 dark:text-white group-hover:text-primary'}`}>
+                              {lesson.title}
+                            </h4>
+                            <div className="flex items-center gap-3 mt-1 flex-wrap">
+                              <span className="text-xs text-slate-500 flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[14px]">article</span>
+                                {lesson.sections.length} Sections
+                              </span>
+                              {lesson.quiz.length > 0 && (
+                                <span className="text-xs text-slate-500 flex items-center gap-1">
+                                  <span className="material-symbols-outlined text-[14px]">quiz</span>
+                                  {lesson.quiz.length} Questions
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Quiz Score / Action */}
+                          <div className="flex flex-col items-end shrink-0 gap-1 ml-4 hidden sm:flex">
+                            {qs != null ? (
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-xs font-bold text-slate-500">Quiz Score</span>
+                                <span className={`px-2 py-0.5 rounded text-xs font-bold ${qs >= 80 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : qs >= 50 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                                  {qs}%
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-xs font-bold text-primary group-hover:underline">Start Lesson</span>
+                            )}
+                          </div>
+
+                          <div className="sm:hidden text-slate-400">
+                            <span className="material-symbols-outlined">chevron_right</span>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Sidebar */}
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-24">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-5">Course AI Guide</h3>
+            <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 rounded-xl mb-4">
+              <div className="size-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white shrink-0 shadow-md">
+                <span className="material-symbols-outlined">smart_toy</span>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">EduTutor AI</h4>
+                <p className="text-xs text-slate-500 mt-0.5">24/7 Academic Support</p>
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">
+              Stuck on a tricky concept? Your AI tutor is available inside every lesson to explain difficult formulas or provide extra examples.
+            </p>
+
+            <hr className="border-slate-200 dark:border-slate-800 my-5" />
+
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Recommended Material</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-primary text-[20px] shrink-0">book_2</span>
+                <div>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-primary cursor-pointer transition-colors">Official National Exam Syllabus 2024</h4>
+                  <p className="text-xs text-slate-500 mt-0.5">PDF • 2.4 MB</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-primary text-[20px] shrink-0">history_edu</span>
+                <div>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-primary cursor-pointer transition-colors">Past Papers & Marking Schemes (2018-2023)</h4>
+                  <p className="text-xs text-slate-500 mt-0.5">Archive • ZIP</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
 

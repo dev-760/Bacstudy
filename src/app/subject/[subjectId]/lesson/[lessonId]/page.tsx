@@ -7,82 +7,75 @@ import { subjects } from "@/data/subjects";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AIChat from "@/components/AIChat";
+import { useProgress } from "@/context/ProgressContext";
 
 function LessonContent({ subjectId, lessonId }: { subjectId: string; lessonId: string }) {
   const subject = subjects.find((s) => s.id === subjectId);
+  const { getProgress } = useProgress();
   if (!subject) return notFound();
+
   const lesson = subject.lessons.find((l) => l.id === lessonId);
   if (!lesson) return notFound();
 
   const idx = subject.lessons.findIndex((l) => l.id === lessonId);
-  const prev = idx > 0 ? subject.lessons[idx - 1] : null;
-  const next = idx < subject.lessons.length - 1 ? subject.lessons[idx + 1] : null;
+  const progressPct = Math.round(((idx) / subject.lessons.length) * 100);
 
   return (
-    <div className="page-wrapper" style={{ paddingTop: 24, maxWidth: 1060 }}>
-      {/* Breadcrumb */}
-      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 20, fontSize: "0.8rem", flexWrap: "wrap" }}>
-        <Link href="/" style={{ color: "#6b7280", transition: "color 0.2s" }}>Dashboard</Link>
-        <span style={{ color: "#374151" }}>/</span>
-        <Link href={`/subject/${subjectId}`} style={{ color: subject.color, transition: "color 0.2s" }}>{subject.name}</Link>
-        <span style={{ color: "#374151" }}>/</span>
+    <main className="flex-1 overflow-y-auto w-full max-w-7xl mx-auto p-4 md:p-8 relative">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-full relative">
 
-        <span style={{ color: "#9ca3af", fontWeight: 500 }}>{lesson.title}</span>
+        {/* Main Lesson Reader */}
+        <article className="flex-1 max-w-3xl bg-white dark:bg-slate-900 p-6 md:p-10 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative z-10">
+
+          {/* Breadcrumb */}
+          <nav className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500 mb-8 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1">
+              <span className="material-symbols-outlined text-[16px]">home</span>
+              Home
+            </Link>
+            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <Link href={`/subject/${subjectId}`} className="hover:text-primary transition-colors">{subject.name}</Link>
+            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span className="text-slate-900 dark:text-slate-100">{lesson.title}</span>
+          </nav>
+
+          <LessonView lesson={lesson} accentColor={subject.color} gradient={subject.gradient} subjectId={subjectId} />
+
+        </article>
+
+        {/* Sidebar: Table of Contents & AIChat */}
+        <aside className="w-full lg:w-80 shrink-0 space-y-6 flex flex-col items-start lg:sticky lg:top-4 z-10">
+
+          {/* Course Progress Context */}
+          <div className="bg-white dark:bg-slate-900 w-full p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">{subject.name}</h3>
+            <div className="flex justify-between items-end mb-2">
+              <p className="text-sm font-bold text-slate-900 dark:text-white">Module {idx + 1} of {subject.lessons.length}</p>
+              <span className="text-xs font-bold text-primary">{progressPct}%</span>
+            </div>
+            <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden mb-4">
+              <div className="h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progressPct}%`, background: subject.gradient }}></div>
+            </div>
+
+            <div className="flex gap-2 text-xs">
+              <Link href={`/subject/${subjectId}`} className="w-full text-center py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-lg transition-colors border border-slate-200 dark:border-slate-700">
+                Syllabus
+              </Link>
+            </div>
+          </div>
+
+          {/* AI Chat Appears Here */}
+          <div className="w-full flex-1 min-h-[400px] flex flex-col">
+            <AIChat
+              lessonTitle={lesson.title}
+              context={`Subject: ${subject.name}. Lesson: ${lesson.title} - ${lesson.description}. Key formulas: ${lesson.keyFormulas.slice(0, 3).join("; ")}`}
+              accentColor={subject.color}
+            />
+          </div>
+
+        </aside>
       </div>
-
-      <LessonView lesson={lesson} accentColor={subject.color} gradient={subject.gradient} />
-
-      {/* Prev / Next */}
-      <div style={{
-        display: "flex", justifyContent: "space-between", gap: 12,
-        marginTop: 40, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.06)",
-        flexWrap: "wrap",
-      }}>
-        {prev ? (
-          <Link href={`/subject/${subjectId}/lesson/${prev.id}`} style={{
-            display: "flex", flexDirection: "column", gap: 3,
-            padding: "14px 18px", background: "rgba(255,255,255,0.025)",
-            border: "1px solid rgba(255,255,255,0.06)", borderRadius: 13,
-            textDecoration: "none", color: "inherit", transition: "all 0.3s",
-            maxWidth: "48%", flex: "1 1 200px",
-          }} className="nav-card">
-            <span style={{ fontSize: "0.72rem", color: "#6b7280" }}>← Previous</span>
-            <span style={{ fontSize: "0.88rem", fontWeight: 600 }}>{prev.title}</span>
-          </Link>
-        ) : <div />}
-        {next ? (
-          <Link href={`/subject/${subjectId}/lesson/${next.id}`} style={{
-            display: "flex", flexDirection: "column", gap: 3,
-            padding: "14px 18px", background: "rgba(255,255,255,0.025)",
-            border: "1px solid rgba(255,255,255,0.06)", borderRadius: 13,
-            textDecoration: "none", color: "inherit", transition: "all 0.3s",
-            textAlign: "right", maxWidth: "48%", flex: "1 1 200px", marginLeft: "auto",
-          }} className="nav-card">
-            <span style={{ fontSize: "0.72rem", color: "#6b7280" }}>Next →</span>
-            <span style={{ fontSize: "0.88rem", fontWeight: 600 }}>{next.title}</span>
-          </Link>
-        ) : <div />}
-      </div>
-
-      <style jsx global>{`
-        .nav-card:hover {
-          border-color: rgba(255,255,255,0.1) !important;
-          background: rgba(255,255,255,0.04) !important;
-          transform: translateY(-2px);
-        }
-        @media (max-width: 600px) {
-          .nav-card {
-            max-width: 100% !important;
-            flex-basis: 100% !important;
-          }
-        }
-      `}</style>
-      <AIChat
-        lessonTitle={lesson.title}
-        context={`Subject: ${subject.name}. Lesson: ${lesson.title} - ${lesson.description}. Key formulas: ${lesson.keyFormulas.slice(0, 3).join("; ")}`}
-        accentColor={subject.color}
-      />
-    </div>
+    </main>
   );
 }
 

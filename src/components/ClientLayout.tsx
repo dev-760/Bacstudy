@@ -11,8 +11,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return (
         <AuthProvider>
             <ProgressProvider totalLessons={totalLessons}>
-                <Navbar />
-                <main style={{ paddingTop: 64, minHeight: "100vh" }}>{children}</main>
+                <div className="relative flex h-auto min-h-screen w-full flex-col academic-gradient overflow-x-hidden bg-background-light dark:bg-background-dark">
+                    <div className="layout-container flex h-full grow flex-col">
+                        <Navbar />
+                        {children}
+                    </div>
+                </div>
             </ProgressProvider>
         </AuthProvider>
     );
