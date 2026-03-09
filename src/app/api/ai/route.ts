@@ -39,7 +39,7 @@ Make questions exam-level difficulty for Moroccan 2BAC.`;
                 { role: "system", content: systemContent },
                 ...messages,
             ],
-            model: "moonshotai/kimi-k2-instruct",
+            model: "llama-3.3-70b-versatile",
             temperature: 0.6,
             max_completion_tokens: 2048,
             top_p: 1,
