@@ -3,6 +3,7 @@
 import { use } from "react";
 import ClientLayout from "@/components/ClientLayout";
 import { subjects } from "@/data/subjects";
+import { nationalExams, NationalExam } from "@/data/exams";
 import { useProgress } from "@/context/ProgressContext";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -178,22 +179,35 @@ function SubjectContent({ subjectId }: { subjectId: string }) {
 
             <hr className="border-slate-200 dark:border-slate-800 my-5" />
 
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Recommended Material</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">National Exams</h3>
+              <Link href={`/subject/${subjectId}/exams`} className="text-xs font-bold text-primary hover:underline">View All</Link>
+            </div>
+
             <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary text-[20px] shrink-0">book_2</span>
-                <div>
-                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-primary cursor-pointer transition-colors">Official National Exam Syllabus 2024</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">PDF • 2.4 MB</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary text-[20px] shrink-0">history_edu</span>
-                <div>
-                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-primary cursor-pointer transition-colors">Past Papers & Marking Schemes (2018-2023)</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Archive • ZIP</p>
-                </div>
-              </li>
+              {(nationalExams[subjectId] || []).slice(0, 3).map((exam, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-[20px] shrink-0">history_edu</span>
+                  <div>
+                    <a href={exam.examUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1 hover:text-primary transition-colors">
+                      {exam.year} — {exam.session} Session
+                    </a>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <p className="text-xs text-slate-500">PDF Document</p>
+                      {exam.correctionUrl && (
+                        <>
+                          <span className="text-slate-300 dark:text-slate-700">•</span>
+                          <a href={exam.correctionUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-emerald-600 hover:text-emerald-500 transition-colors uppercase tracking-wider">Solution</a>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+
+              {(!nationalExams[subjectId] || nationalExams[subjectId].length === 0) && (
+                <li className="text-sm text-slate-500 italic">No past exams available yet.</li>
+              )}
             </ul>
           </div>
         </div>
