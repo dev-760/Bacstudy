@@ -49,186 +49,233 @@ function AuthForm() {
     };
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark font-display text-navy-900 dark:text-slate-100">
-            {/* Top Navigation Bar */}
-            <header className="flex items-center justify-between border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 md:px-10 py-4 sticky top-0 z-50">
-                <Link href="/" className="flex items-center gap-3">
-                    <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white shadow-sm">
-                        <span className="material-symbols-outlined">school</span>
+        <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+            {/* Top Navigation */}
+            <header className="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-background-dark/70 backdrop-blur-xl px-5 md:px-8 py-3 sticky top-0 z-50">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="size-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-primary to-[#7c3aed] shadow-md shadow-primary/20 group-hover:shadow-primary/30 transition-shadow">
+                        <span className="material-symbols-outlined text-white text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
                     </div>
-                    <div>
-                        <h1 className="text-navy-900 dark:text-white text-xl font-bold leading-tight tracking-tight hover:text-primary transition-colors">BACStudy</h1>
-                        <p className="text-xs text-primary font-medium uppercase tracking-wider">Academic Portal</p>
+                    <div className="flex flex-col">
+                        <h1 className="text-[15px] font-extrabold leading-none tracking-tight text-slate-900 dark:text-white">BACStudy</h1>
+                        <span className="text-[10px] font-semibold text-primary/70 uppercase tracking-widest mt-0.5">Academic Portal</span>
                     </div>
                 </Link>
-                <div className="flex items-center gap-4">
-                    <button className="flex items-center justify-center p-2 rounded-lg hover:bg-primary/10 transition-colors text-navy-700 dark:text-slate-300">
-                        <span className="material-symbols-outlined">help_outline</span>
-                    </button>
-                    <div className="h-6 w-px bg-primary/20 hidden sm:block"></div>
-                    <button className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
-                        <span className="material-symbols-outlined text-lg">language</span>
-                        English
+                <div className="flex items-center gap-3">
+                    <button className="flex items-center justify-center p-2 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/40 transition-all text-slate-500 dark:text-slate-400">
+                        <span className="material-symbols-outlined text-[20px]">help_outline</span>
                     </button>
                 </div>
             </header>
 
-            {/* Main Content Area */}
+            {/* Main */}
             <main className="flex-1 flex items-center justify-center p-4 md:p-8 relative">
-                {/* Background Decorative Elements */}
-                <div className="absolute top-0 left-0 w-[100vw] h-[100vh] overflow-hidden pointer-events-none -z-10">
-                    <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] dark:opacity-30"></div>
-                    <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-purple-500/20 rounded-full blur-[120px] dark:opacity-30"></div>
+                {/* Background Decorative */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+                    <div className="absolute -top-[15%] -left-[10%] w-[50%] h-[50%] bg-primary/[0.07] rounded-full blur-[100px] dark:opacity-40"></div>
+                    <div className="absolute -bottom-[15%] -right-[10%] w-[50%] h-[50%] bg-[#7c3aed]/[0.07] rounded-full blur-[100px] dark:opacity-40"></div>
+                    <div className="absolute inset-0 dot-pattern opacity-30"></div>
                 </div>
 
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    className="w-full max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-2xl shadow-primary/5 border border-primary/10 overflow-hidden relative z-10"
+                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="w-full max-w-md relative z-10"
                 >
-                    {/* Tabs */}
-                    <div className="flex w-full border-b border-primary/10 bg-slate-50 dark:bg-slate-800/50">
-                        <button
-                            className={`flex-[0.5] py-4 text-sm font-bold tracking-wide transition-colors ${mode === "login" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
-                            onClick={() => { setMode("login"); setError(""); setSuccess(""); }}
-                        >
-                            Sign In
-                        </button>
-                        <button
-                            className={`flex-[0.5] py-4 text-sm font-bold tracking-wide transition-colors ${mode === "register" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
-                            onClick={() => { setMode("register"); setError(""); setSuccess(""); }}
-                        >
-                            Register
-                        </button>
+                    {/* Trust Badges */}
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                            <span className="material-symbols-outlined text-emerald-500 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
+                            Secure Login
+                        </div>
+                        <div className="w-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                            <span className="material-symbols-outlined text-primary text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+                            Encrypted
+                        </div>
+                        <div className="w-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                            <span className="material-symbols-outlined text-amber-500 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>shield</span>
+                            Private
+                        </div>
                     </div>
 
-                    <div className="p-8 pt-8">
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl font-bold text-navy-900 dark:text-white">
-                                {mode === "login" ? "Welcome Back" : "Create Account"}
-                            </h2>
-                            <p className="text-navy-700 dark:text-slate-400 mt-2 text-sm">
-                                {mode === "login" ? "Sign in to access your courses and preparation materials." : "Join BACStudy to unlock your academic potential."}
-                            </p>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <AnimatePresence>
-                                {mode === "register" && (
-                                    <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: "auto" }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        className="space-y-2 overflow-hidden"
-                                    >
-                                        <label htmlFor="name" className="block text-sm font-semibold text-navy-900 dark:text-slate-200">
-                                            Full Name
-                                        </label>
-                                        <div className="relative group">
-                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                                <span className="material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-xl">person</span>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                id="name"
-                                                required={mode === "register"}
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                placeholder="Student Name"
-                                                autoComplete="name"
-                                                className="block w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-navy-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
-                                            />
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            <div className="space-y-2">
-                                <label htmlFor="email" className="block text-sm font-semibold text-navy-900 dark:text-slate-200">
-                                    Email Address
-                                </label>
-                                <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <span className="material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-xl">mail</span>
-                                    </div>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        required
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="student@example.com"
-                                        autoComplete="email"
-                                        className="block w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-navy-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="password" className="block text-sm font-semibold text-navy-900 dark:text-slate-200">
-                                        Password
-                                    </label>
-                                    {mode === "login" && (
-                                        <a href="#" className="text-xs font-medium text-primary hover:underline transition-all">Forgot password?</a>
-                                    )}
-                                </div>
-                                <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <span className="material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-xl">lock</span>
-                                    </div>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        required
-                                        minLength={6}
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••"
-                                        autoComplete={mode === "login" ? "current-password" : "new-password"}
-                                        className="block w-full pl-11 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-navy-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
-                                    />
-                                </div>
-                            </div>
-
-                            <AnimatePresence>
-                                {error && (
-                                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-lg text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base">error</span> {error}
-                                    </motion.div>
-                                )}
-                                {success && (
-                                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="p-3 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-900/30 rounded-lg text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base">check_circle</span> {success}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
+                    {/* Card */}
+                    <div className="bg-white dark:bg-slate-900/80 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/20 border border-slate-200/60 dark:border-slate-800/60 overflow-hidden backdrop-blur-sm">
+                        {/* Tabs */}
+                        <div className="flex w-full border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-800/20">
                             <button
-                                type="submit"
-                                disabled={loading}
-                                className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/25 transition-all text-sm ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-primary/90 active:scale-[0.98]"}`}
+                                className={`relative flex-1 py-3.5 text-[13px] font-bold tracking-wide transition-colors ${mode === "login" ? "text-primary" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                                onClick={() => { setMode("login"); setError(""); setSuccess(""); }}
                             >
-                                {loading ? (
-                                    <span className="material-symbols-outlined animate-spin text-lg">sync</span>
-                                ) : (
-                                    <>
-                                        {mode === "login" ? "Secure Sign In" : "Create Account"}
-                                        <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                                    </>
+                                Sign In
+                                {mode === "login" && (
+                                    <motion.div layoutId="authTab" className="absolute bottom-0 left-4 right-4 h-[2px] bg-primary rounded-full" />
                                 )}
                             </button>
-                        </form>
+                            <button
+                                className={`relative flex-1 py-3.5 text-[13px] font-bold tracking-wide transition-colors ${mode === "register" ? "text-primary" : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"}`}
+                                onClick={() => { setMode("register"); setError(""); setSuccess(""); }}
+                            >
+                                Register
+                                {mode === "register" && (
+                                    <motion.div layoutId="authTab" className="absolute bottom-0 left-4 right-4 h-[2px] bg-primary rounded-full" />
+                                )}
+                            </button>
+                        </div>
+
+                        <div className="p-7 md:p-8">
+                            <div className="text-center mb-7">
+                                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                                    {mode === "login" ? "Welcome Back" : "Create Account"}
+                                </h2>
+                                <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm leading-relaxed">
+                                    {mode === "login" ? "Sign in to access your courses and preparation materials." : "Join BACStudy to unlock your academic potential."}
+                                </p>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <AnimatePresence>
+                                    {mode === "register" && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="space-y-2 overflow-hidden"
+                                        >
+                                            <label htmlFor="name" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                                                Full Name
+                                            </label>
+                                            <div className="relative group">
+                                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                                    <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 group-focus-within:text-primary transition-colors text-[20px]">person</span>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    id="name"
+                                                    required={mode === "register"}
+                                                    value={name}
+                                                    onChange={(e) => setName(e.target.value)}
+                                                    placeholder="Student Name"
+                                                    autoComplete="name"
+                                                    className="block w-full pl-11 pr-4 py-3 bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/40 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary/40 transition-all text-sm font-medium"
+                                                />
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="email" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                                        Email Address
+                                    </label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                            <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 group-focus-within:text-primary transition-colors text-[20px]">mail</span>
+                                        </div>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            required
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="student@example.com"
+                                            autoComplete="email"
+                                            className="block w-full pl-11 pr-4 py-3 bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/40 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary/40 transition-all text-sm font-medium"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <label htmlFor="password" className="block text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                                            Password
+                                        </label>
+                                        {mode === "login" && (
+                                            <a href="#" className="text-[11px] font-semibold text-primary hover:underline underline-offset-2 transition-all">Forgot password?</a>
+                                        )}
+                                    </div>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                            <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 group-focus-within:text-primary transition-colors text-[20px]">lock</span>
+                                        </div>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            required
+                                            minLength={6}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="••••••••"
+                                            autoComplete={mode === "login" ? "current-password" : "new-password"}
+                                            className="block w-full pl-11 pr-4 py-3 bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/40 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary/40 transition-all text-sm font-medium"
+                                        />
+                                    </div>
+                                </div>
+
+                                <AnimatePresence>
+                                    {error && (
+                                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="p-3 bg-red-50 dark:bg-red-500/5 border border-red-200/60 dark:border-red-500/15 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>error</span> {error}
+                                        </motion.div>
+                                    )}
+                                    {success && (
+                                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="p-3 bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200/60 dark:border-emerald-500/15 rounded-xl text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span> {success}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-gradient-to-r from-primary to-[#1d4ed8] text-white font-bold rounded-xl shadow-lg shadow-primary/20 transition-all text-sm ${loading ? "opacity-60 cursor-not-allowed" : "hover:shadow-primary/30 active:scale-[0.98]"}`}
+                                >
+                                    {loading ? (
+                                        <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    ) : (
+                                        <>
+                                            {mode === "login" ? "Sign In" : "Create Account"}
+                                            <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {/* Social Proof */}
+                    <div className="mt-6 text-center">
+                        <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+                            Trusted by Moroccan students preparing for the National Exam
+                        </p>
+                        <div className="flex items-center justify-center gap-5 mt-3">
+                            <div className="flex flex-col items-center">
+                                <span className="text-lg font-extrabold text-slate-900 dark:text-white">5</span>
+                                <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-bold">Subjects</span>
+                            </div>
+                            <div className="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-lg font-extrabold text-slate-900 dark:text-white">50+</span>
+                                <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-bold">Lessons</span>
+                            </div>
+                            <div className="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
+                            <div className="flex flex-col items-center">
+                                <span className="text-lg font-extrabold text-slate-900 dark:text-white">AI</span>
+                                <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-bold">Tutor</span>
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
             </main>
 
             {/* Footer */}
-            <footer className="p-6 text-center">
-                <p className="text-slate-500 dark:text-slate-400 text-xs">
-                    © {new Date().getFullYear()} BACStudy Platform. All rights reserved. <br className="sm:hidden" />
-                    <a href="#" className="hover:text-primary underline ml-1">Privacy Policy</a> • <a href="#" className="hover:text-primary underline ml-1">Terms of Service</a>
+            <footer className="p-5 text-center border-t border-slate-100 dark:border-slate-800/40">
+                <p className="text-slate-400 dark:text-slate-500 text-[11px] font-medium">
+                    © {new Date().getFullYear()} BACStudy Platform. All rights reserved.{" "}
+                    <a href="#" className="hover:text-primary underline underline-offset-2 ml-1">Privacy</a> •{" "}
+                    <a href="#" className="hover:text-primary underline underline-offset-2 ml-1">Terms</a>
                 </p>
             </footer>
         </div>

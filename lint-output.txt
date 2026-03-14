@@ -1,0 +1,88 @@
+﻿
+C:\Users\Hassan\Desktop\Bacstudy\src\app\layout.tsx
+  35:9  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+  39:9  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+C:\Users\Hassan\Desktop\Bacstudy\src\app\page.tsx
+  109:93   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  109:196  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  123:92   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Hassan\Desktop\Bacstudy\src\app\subject\[subjectId]\exams\page.tsx
+  64:82  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Hassan\Desktop\Bacstudy\src\app\subject\[subjectId]\lesson\[lessonId]\page.tsx
+  15:11  warning  'getProgress' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Hassan\Desktop\Bacstudy\src\app\subject\[subjectId]\page.tsx
+  6:25  warning  'NationalExam' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Hassan\Desktop\Bacstudy\src\components\AIChat.tsx
+    5:18   warning  'AnimatePresence' is defined but never used                      @typescript-eslint/no-unused-vars
+   18:56   warning  'accentColor' is assigned a value but never used                 @typescript-eslint/no-unused-vars
+  113:103  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Hassan\Desktop\Bacstudy\src\components\CountdownTimer.tsx
+  12:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Hassan\Desktop\Bacstudy\src\components\CountdownTimer.tsx:12:5
+  10 |
+  11 |   useEffect(() => {
+> 12 |     setMounted(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  13 |     const updateCountdown = () => {
+  14 |       const diff = examDate.getTime() - new Date().getTime();
+  15 |       if (diff > 0) {  react-hooks/set-state-in-effect
+
+C:\Users\Hassan\Desktop\Bacstudy\src\components\LessonView.tsx
+   9:8   warning  'Link' is defined but never used       @typescript-eslint/no-unused-vars
+  18:69  warning  'subjectId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Hassan\Desktop\Bacstudy\src\components\Navbar.tsx
+  10:9  warning  'pathname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Hassan\Desktop\Bacstudy\src\context\AuthContext.tsx
+  29:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Hassan\Desktop\Bacstudy\src\context\AuthContext.tsx:29:17
+  27 |             if (localSession) {
+  28 |                 const parsed = JSON.parse(localSession);
+> 29 |                 setUser(parsed.user);
+     |                 ^^^^^^^ Avoid calling setState() directly within an effect
+  30 |                 setSession(parsed.session);
+  31 |             }
+  32 |             setLoading(false);  react-hooks/set-state-in-effect
+
+C:\Users\Hassan\Desktop\Bacstudy\src\context\ProgressContext.tsx
+  27:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Hassan\Desktop\Bacstudy\src\context\ProgressContext.tsx:27:17
+  25 |             const stored = localStorage.getItem(STORAGE_KEY);
+  26 |             if (stored) {
+> 27 |                 setProgress(JSON.parse(stored));
+     |                 ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |             }
+  29 |         } catch { }
+  30 |     }, []);  react-hooks/set-state-in-effect
+
+Γ£û 17 problems (8 errors, 9 warnings)
+
+
